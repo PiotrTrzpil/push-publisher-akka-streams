@@ -29,12 +29,12 @@ When adapting a producer that gives no means of control over generation of eleme
 1. Discard the newly produced element if the subscriber has not indicated any demand (lose data)
 2. Buffer the element until the subscriber can receive it (preserve some data or risk of running out of memory)
 3. Using a buffer of recently produced elements, aggregate them into a single one (partially preserve information), 
-4. Throttle produced elements by constant number or constant time (keep the rate small and preserve only the newest one)
+4. Throttle produced elements by constant number or constant time (keep the rate small and preserve only the newest element)
 5. A combination of the above
 
-The first approach is the simplest one. If the subscriber has not requested any elements at the time one was produced, it is discarded. The subscriber will receive only the elements that were produced while the demand was active, in order. This solution can be used if the elements produced are not critical and can be lost. However, it has a potential downside 
+The first approach is the simplest one. If the subscriber has not requested any elements at the time one was produced, it is discarded. The subscriber will receive only the elements that were produced while the demand was active, in order. This solution can be used if the elements produced are not critical and losing them is permitted. However, event if the elements are not critical, this approach it has a potential downside of favoring older elements over newer ones. Although the elements will be sent to the subscriber immediately, they may saturate the demand giving no chance for the newest ones.
 
-The tick source uses the first approach. If the subscriber is not prepared to receive the tick at the time it is produced, it is dropped.
+The timed tick source uses this approach. If the subscriber is not prepared to receive the tick at the time it is produced, it is dropped.
 
 There is also a most straightforward example of a push-based source: a generic source that produces an element at any time when it receives a signal (message, method call etc.). It could be then used to implement any source that cannot be controlled.
 
