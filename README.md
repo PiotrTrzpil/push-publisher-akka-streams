@@ -36,6 +36,12 @@ The first approach is the simplest one. If the subscriber has not requested any 
 
 The timed tick source uses this approach. If the subscriber is not prepared to receive the tick at the time it is produced, it is dropped.
 
+The second approach - buffering - is really only a slight modification of the first one. Here, we have two choices: either the buffer will be bounded by some maximum number of elements or unbounded. Bounded one will in most cases just defer the moment of losing an element, but it might be useful if there are some short peaks in rate in the stream. Unbounded one on the other hand can be dangerous: a long rate peak or a consistently high rate of elements compared to the subscriber speed will result in out of memory error. This is something reactive streams strives to avoid in the first place.
+
+The approach of aggregation - the third one - is an interesting one. We can use it only if the elements produced have the property of being combinable, and the most straightforward example of it is a state of some sensor. If our stream represents contant updates of a measured value, we could aggregate them, taking several elements in the buffer and computing value average and timespan it represents. We could do it per constant numer of elements, per constant time or use other algorithm.
+
+Throttling 
+
 There is also a most straightforward example of a push-based source: a generic source that produces an element at any time when it receives a signal (message, method call etc.). It could be then used to implement any source that cannot be controlled.
 
 
